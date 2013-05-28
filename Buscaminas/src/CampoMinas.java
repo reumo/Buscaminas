@@ -19,26 +19,29 @@ public class CampoMinas {
 		int fila;
 		int columna;
 		Random r = new Random();
+		/*for(int i=0;i<filas;i++)
+			for(int j=0;j<columnas;j++)
+				campoMinas[i][j]=new Casilla(Casilla.CERO);*/
 		while(numMinas>0){
 			fila= r.nextInt(filas);
 			columna=r.nextInt(columnas);
-			if(campoMinas[fila][columna].getContenido()!=Casilla.MINA){
+			if(campoMinas[fila][columna]==null){
 				campoMinas[fila][columna]=new Casilla(Casilla.MINA);
 			numMinas--;
 			}
 		}
 		for(int i=0;i<filas;i++)
 			for(int j=0;j<columnas;j++)
-				campoMinas[i][j]=new Casilla(calculoBombasCercanas(i,j));
+				campoMinas[i][j]=new Casilla(calculoMinasCercanas(i,j));
 	
 	}
-	private int calculoBombasCercanas(int fila,int columna){
+	private int calculoMinasCercanas(int fila,int columna){
 		int cont=0;
 		for(int fi=fila-1;fi<=fila+1;fi++)
 			for(int co=columna-1;co<=columna+1;columna++)
 				try{
 					if((co!=columna || fi!=fila)
-						&& campoMinas[fila][columna].getContenido()==Casilla.MINA)
+						&& (campoMinas[fila][columna].getContenido()==Casilla.MINA))
 					cont++;			
 				}
 					catch(IndexOutOfBoundsException e){}		
