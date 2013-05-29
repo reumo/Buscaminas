@@ -19,39 +19,52 @@ public class CampoMinas {
 		int fila;
 		int columna;
 		Random r = new Random();
-		/*for(int i=0;i<filas;i++)
+		//relleno de cellulas vacias
+		for(int i=0;i<filas;i++)
 			for(int j=0;j<columnas;j++)
-				campoMinas[i][j]=new Casilla(Casilla.CERO);*/
+				campoMinas[i][j]=new Casilla(Casilla.CERO);
+		//relleno aleatorio de minas
 		while(numMinas>0){
 			fila= r.nextInt(filas);
 			columna=r.nextInt(columnas);
-			if(campoMinas[fila][columna]==null){
+			if(campoMinas[fila][columna].getContenido()==Casilla.CERO){
 				campoMinas[fila][columna]=new Casilla(Casilla.MINA);
-			numMinas--;
+				numMinas--;
 			}
 		}
+		//relleno de cuantas minas hay adiacente
 		for(int i=0;i<filas;i++)
 			for(int j=0;j<columnas;j++)
-				campoMinas[i][j]=new Casilla(calculoMinasCercanas(i,j));
+				if(campoMinas[i][j].getContenido()==Casilla.CERO)
+					campoMinas[i][j]=new Casilla(calculoMinasCercanas(i,j));
 	
 	}
 	private int calculoMinasCercanas(int fila,int columna){
 		int cont=0;
 		for(int fi=fila-1;fi<=fila+1;fi++)
-			for(int co=columna-1;co<=columna+1;columna++)
+			for(int co=columna-1;co<=columna+1;co++)
 				try{
-					if((co!=columna || fi!=fila)
-						&& (campoMinas[fila][columna].getContenido()==Casilla.MINA))
-					cont++;			
+					if((co!=columna || fi!=fila)&& (campoMinas[fila][columna].getContenido()==Casilla.MINA))
+						cont++;			
 				}
 					catch(IndexOutOfBoundsException e){}		
 		return cont;	
 		}
-	
+	public int getContenidoCelda(int fila,int columna){
+		return campoMinas[fila][columna].getContenido();
+		
+	}
+	public int getEstadoCelda(int fila,int columna){
+		return campoMinas[fila][columna].getEstado();
+	}
+	/*// Metodo de pruebaaaaaaaaaaaaaaa
+	public void setEstadoCelda(int fila,int columna){
+		campoMinas[fila][columna].setEstado(Casilla.DESCUBIERTA);
+	}*/
 	public void clickIzquierdo(int fila,int columna) throws CasillaAbiertaException{
 		if(campoMinas[fila][columna].getEstado()!=Casilla.DESCUBIERTA){
 			campoMinas[fila][columna].setEstado(Casilla.DESCUBIERTA);
-			if(campoMinas[fila][columna].getContenido()==Casilla.CERO)
+			/*if(campoMinas[fila][columna].getContenido()==Casilla.CERO)
 				for(int fi=fila-1;fi<=fila+1;fi++)
 					for(int co=columna-1;co<=columna+1;columna++)
 						try{
@@ -64,12 +77,13 @@ public class CampoMinas {
 				derrota();
 			else if(--casillasParaLaVictoria==0)
 					victoria();
-				
+		*/		
 		}
 		else throw new CasillaAbiertaException();
 		}
+	
 	public void clickDerecho(int fila,int columna) throws CasillaAbiertaException{
-		if(campoMinas[fila][columna].getEstado()!=Casilla.DESCUBIERTA){
+		
 			if(campoMinas[fila][columna].getEstado()==Casilla.CUBIERTA){
 				campoMinas[fila][columna].setEstado(Casilla.MARCADA);
 				numMinas--;
@@ -78,9 +92,10 @@ public class CampoMinas {
 				campoMinas[fila][columna].setEstado(Casilla.INTERROGACION);
 				numMinas++;
 			}
-			else campoMinas[fila][columna].setEstado(Casilla.DESCUBIERTA);
-		}
-		else throw new CasillaAbiertaException();
+			else if(campoMinas[fila][columna].getEstado()==Casilla.INTERROGACION)
+					campoMinas[fila][columna].setEstado(Casilla.CUBIERTA);
+		
+			else throw new CasillaAbiertaException();
 	}
 	public void clickIzquierdoDerecho(int fila,int columna){
 		if(campoMinas[fila][columna].getEstado()==Casilla.DESCUBIERTA && campoMinas[fila][columna].getContenido()!=Casilla.CERO)

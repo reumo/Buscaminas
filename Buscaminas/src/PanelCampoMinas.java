@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -8,16 +10,43 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 	private CampoMinas cm;
 	private int filas;
 	private int columnas;
-	private int dimCelda=10;
+	private int dimCelda=20;
 	public PanelCampoMinas(int filas,int columnas,int numMinas) {
+		this.filas=filas;
+		this.columnas=columnas;
 		addMouseListener(this);
 		cm=new CampoMinas(filas, columnas, numMinas);
 		setPreferredSize(new java.awt.Dimension(filas*dimCelda, columnas*dimCelda));
+		
+		
+	}
+	public void paintComponent(Graphics g){
+		if(cm.getEstadoPartida()==CampoMinas.JUGANDO)
+			for(int i=0;i<filas;i++)
+				for(int j=0;j<columnas;j++){
+					if(cm.getEstadoCelda(i, j)>=Casilla.CUBIERTA){
+						if(cm.getEstadoCelda(i, j)==Casilla.CUBIERTA)
+							g.setColor(Color.GRAY);
+						else if(cm.getEstadoCelda(i, j)==Casilla.MARCADA)
+							g.setColor(Color.BLUE);
+						else if(cm.getEstadoCelda(i, j)==Casilla.INTERROGACION)
+							g.setColor(Color.MAGENTA);
+						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
+					}
+					else {
+						g.setColor(Color.BLACK);
+						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
+						g.setColor(Color.WHITE);
+						g.drawString(Integer.toString(cm.getContenidoCelda(i, j)), i*dimCelda+7, j*dimCelda+15);
+					}
+				}
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseClicked(MouseEvent m) {
+		
+		
+		
 		
 	}
 
@@ -40,9 +69,17 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mouseReleased(MouseEvent m) {
+		if(m.getButton()==m.BUTTON3)
+			try {
+				cm.clickDerecho(m.getX()/dimCelda,m.getY()/dimCelda);
+				repaint();
+			} catch (CasillaAbiertaException e) {}
+			if(m.getButton()==m.BUTTON1)
+				try {
+					cm.clickIzquierdo(m.getX()/dimCelda, m.getY()/dimCelda);
+					repaint();
+				} catch (CasillaAbiertaException e) {}
 	}
 
 }

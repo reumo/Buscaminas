@@ -1,4 +1,6 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -39,12 +41,16 @@ public class BuscaMinas extends JFrame{
 		menuBar.add(menuJuego);
 		
 		setJMenuBar(menuBar);
-		PCM = new PanelCampoMinas(16,30,99);
+		PCM = new PanelCampoMinas(30,16,99);
 		add(PCM,BorderLayout.NORTH);
 		lblMinas=new JLabel("0");
+		lblMinas.setForeground(Color.WHITE);
 		add(lblMinas,BorderLayout.EAST);
 		lblTiempo=new JLabel("0");
+		lblTiempo.setForeground(Color.WHITE);
 		add(lblTiempo,BorderLayout.WEST);
+		getContentPane().setBackground(Color.BLACK);
+		
 		pack();
 		
 	}
