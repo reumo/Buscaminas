@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -8,7 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 	
 
-public class BuscaMinas extends JFrame{
+public class BuscaMinas extends JFrame implements ActionListener{
 	PanelCampoMinas PCM;
 	JLabel lblMinas;
 	JLabel lblTiempo;
@@ -20,18 +22,21 @@ public class BuscaMinas extends JFrame{
 	JMenuItem itemAparencia;
 	JMenuItem itemSalir;
 	
-	public BuscaMinas(){
+	public BuscaMinas() {
 		super("Buscaminas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 		setLayout(new BorderLayout());
 		menuBar=new JMenuBar();
 		menuJuego=new JMenu("Juego");
 		itemNuevo=new JMenuItem("Nuevo Juego");
+		itemNuevo.addActionListener(this);
 		itemEstadisticas=new JMenuItem("Estadisticas");
 		itemOpciones= new JMenuItem("Opciones");
 		itemAparencia=new JMenuItem("Aparencia");
 		itemSalir=new JMenuItem("Salir");
 		menuJuego.add(itemNuevo);
+		
 		menuJuego.addSeparator();
 		menuJuego.add(itemEstadisticas);
 		menuJuego.add(itemOpciones);
@@ -58,6 +63,13 @@ public class BuscaMinas extends JFrame{
 		new BuscaMinas().setVisible(true);
 		
 
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==itemNuevo){
+			PCM = new PanelCampoMinas(30,16,99);
+			super.add(PCM,BorderLayout.NORTH);
+		}
 	}
 
 }

@@ -44,7 +44,7 @@ public class CampoMinas {
 		for(int fi=fila-1;fi<=fila+1;fi++)
 			for(int co=columna-1;co<=columna+1;co++)
 				try{
-					if((co!=columna || fi!=fila)&& (campoMinas[fila][columna].getContenido()==Casilla.MINA))
+					if((co!=columna || fi!=fila) && (campoMinas[fi][co].getContenido()==Casilla.MINA))
 						cont++;			
 				}
 					catch(IndexOutOfBoundsException e){}		
@@ -61,10 +61,14 @@ public class CampoMinas {
 	public void setEstadoCelda(int fila,int columna){
 		campoMinas[fila][columna].setEstado(Casilla.DESCUBIERTA);
 	}*/
-	public void clickIzquierdo(int fila,int columna) throws CasillaAbiertaException{
+	public void clickIzquierdo(int fila,int columna)/* throws CasillaAbiertaException*/{
 		if(campoMinas[fila][columna].getEstado()!=Casilla.DESCUBIERTA){
 			campoMinas[fila][columna].setEstado(Casilla.DESCUBIERTA);
-			/*if(campoMinas[fila][columna].getContenido()==Casilla.CERO)
+			if(campoMinas[fila][columna].getContenido()==Casilla.MINA)
+				derrota();
+			else if(--casillasParaLaVictoria==0)
+					victoria();
+			/*else if(campoMinas[fila][columna].getContenido()==Casilla.CERO)
 				for(int fi=fila-1;fi<=fila+1;fi++)
 					for(int co=columna-1;co<=columna+1;columna++)
 						try{
@@ -72,15 +76,15 @@ public class CampoMinas {
 								clickIzquierdo(fi,co);
 			
 						}
-							catch(IndexOutOfBoundsException e){}
+							catch(IndexOutOfBoundsException e){}*/
 			else if(campoMinas[fila][columna].getContenido()==Casilla.MINA)
 				derrota();
 			else if(--casillasParaLaVictoria==0)
 					victoria();
-		*/		
+			}
 		}
-		else throw new CasillaAbiertaException();
-		}
+		/*else throw new CasillaAbiertaException();
+		}*/
 	
 	public void clickDerecho(int fila,int columna) throws CasillaAbiertaException{
 		
@@ -103,11 +107,11 @@ public class CampoMinas {
 				for(int co=columna-1;co<=columna+1;columna++)
 					try{
 						if((co!=columna || fi!=fila)&&campoMinas[fila][columna].getEstado()!=Casilla.MARCADA)
-							try {
+							/*try {*/
 								clickIzquierdo(fi,co);
-							} catch (CasillaAbiertaException e) {
+							/*} catch (CasillaAbiertaException e) {
 								
-							}
+							}*/
 		
 					}
 						catch(IndexOutOfBoundsException e){}

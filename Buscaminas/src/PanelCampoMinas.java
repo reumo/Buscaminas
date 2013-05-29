@@ -11,6 +11,8 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 	private int filas;
 	private int columnas;
 	private int dimCelda=20;
+	private int clickX;
+	private int clickY;
 	public PanelCampoMinas(int filas,int columnas,int numMinas) {
 		this.filas=filas;
 		this.columnas=columnas;
@@ -21,7 +23,15 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 		
 	}
 	public void paintComponent(Graphics g){
-		if(cm.getEstadoPartida()==CampoMinas.JUGANDO)
+		if(cm.getEstadoPartida()==CampoMinas.DERROTA){
+			for(int i=0;i<filas;i++)
+				for(int j=0;j< columnas;j++)
+					if(cm.getContenidoCelda(i, j)==Casilla.MINA){
+					g.setColor(Color.RED);
+					g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
+				}
+		}
+		else if(cm.getEstadoPartida()==CampoMinas.JUGANDO)	
 			for(int i=0;i<filas;i++)
 				for(int j=0;j<columnas;j++){
 					if(cm.getEstadoCelda(i, j)>=Casilla.CUBIERTA){
@@ -70,16 +80,22 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 
 	@Override
 	public void mouseReleased(MouseEvent m) {
-		if(m.getButton()==m.BUTTON3)
+		if(m.getButton()==m.BUTTON2){
+			cm.clickIzquierdoDerecho(m.getX()/dimCelda,m.getY()/dimCelda);
+			repaint();
+		}
+		else if(m.getButton()==m.BUTTON3)
 			try {
 				cm.clickDerecho(m.getX()/dimCelda,m.getY()/dimCelda);
 				repaint();
 			} catch (CasillaAbiertaException e) {}
-			if(m.getButton()==m.BUTTON1)
-				try {
+		else if(m.getButton()==m.BUTTON1){
+				/*try {*/
 					cm.clickIzquierdo(m.getX()/dimCelda, m.getY()/dimCelda);
 					repaint();
-				} catch (CasillaAbiertaException e) {}
+				/*} catch (CasillaAbiertaException e) {}*/
+		}
+		
 	}
 
 }
