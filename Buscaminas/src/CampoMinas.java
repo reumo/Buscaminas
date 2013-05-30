@@ -68,19 +68,16 @@ public class CampoMinas {
 				derrota();
 			else if(--casillasParaLaVictoria==0)
 					victoria();
-			/*else if(campoMinas[fila][columna].getContenido()==Casilla.CERO)
+			else if(campoMinas[fila][columna].getContenido()==Casilla.CERO)
 				for(int fi=fila-1;fi<=fila+1;fi++)
-					for(int co=columna-1;co<=columna+1;columna++)
+					for(int co=columna-1;co<=columna+1;co++)
+						if(co!=columna || fi!=fila)
 						try{
-							if(co!=columna || fi!=fila)
+							
 								clickIzquierdo(fi,co);
 			
 						}
-							catch(IndexOutOfBoundsException e){}*/
-			else if(campoMinas[fila][columna].getContenido()==Casilla.MINA)
-				derrota();
-			else if(--casillasParaLaVictoria==0)
-					victoria();
+							catch(IndexOutOfBoundsException e){}
 			}
 		}
 		/*else throw new CasillaAbiertaException();
@@ -102,11 +99,11 @@ public class CampoMinas {
 			else throw new CasillaAbiertaException();
 	}
 	public void clickIzquierdoDerecho(int fila,int columna){
-		if(campoMinas[fila][columna].getEstado()==Casilla.DESCUBIERTA && campoMinas[fila][columna].getContenido()!=Casilla.CERO)
+		//if(campoMinas[fila][columna].getEstado()==Casilla.DESCUBIERTA && campoMinas[fila][columna].getContenido()!=Casilla.CERO)
 			for(int fi=fila-1;fi<=fila+1;fi++)
-				for(int co=columna-1;co<=columna+1;columna++)
+				for(int co=columna-1;co<=columna+1;co++)
 					try{
-						if((co!=columna || fi!=fila)&&campoMinas[fila][columna].getEstado()!=Casilla.MARCADA)
+						if(/*(co!=columna || fi!=fila)&&*/ campoMinas[fila][columna].getEstado()!=Casilla.MARCADA)
 							/*try {*/
 								clickIzquierdo(fi,co);
 							/*} catch (CasillaAbiertaException e) {

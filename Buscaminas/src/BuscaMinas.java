@@ -46,7 +46,7 @@ public class BuscaMinas extends JFrame implements ActionListener{
 		menuBar.add(menuJuego);
 		
 		setJMenuBar(menuBar);
-		PCM = new PanelCampoMinas(30,16,99);
+		PCM = new PanelCampoMinas(30,16,10);
 		add(PCM,BorderLayout.NORTH);
 		lblMinas=new JLabel("0");
 		lblMinas.setForeground(Color.WHITE);
@@ -67,8 +67,7 @@ public class BuscaMinas extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==itemNuevo){
-			PCM = new PanelCampoMinas(30,16,99);
-			super.add(PCM,BorderLayout.NORTH);
+			
 		}
 	}
 

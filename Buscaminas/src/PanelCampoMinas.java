@@ -11,8 +11,12 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 	private int filas;
 	private int columnas;
 	private int dimCelda=20;
-	private int clickX;
-	private int clickY;
+	private int fp;
+	private int cp;
+	private boolean btn1=false;
+	private boolean btn3=false;
+	
+	
 	public PanelCampoMinas(int filas,int columnas,int numMinas) {
 		this.filas=filas;
 		this.columnas=columnas;
@@ -73,29 +77,36 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mousePressed(MouseEvent m) {
+		fp=m.getX()/dimCelda;
+		cp=m.getY()/dimCelda;
+		if(m.getButton()==MouseEvent.BUTTON3){
+			btn3=true;
+			if(!btn1)
+				try {
+					cm.clickDerecho(fp,cp);
+				} catch (CasillaAbiertaException e) {
+
+				}
+		 repaint();
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent m) {
-		if(m.getButton()==m.BUTTON2){
-			cm.clickIzquierdoDerecho(m.getX()/dimCelda,m.getY()/dimCelda);
+		int f=m.getX()/dimCelda;
+		int c=m.getY()/dimCelda;
+		btn1=m.getButton()==MouseEvent.BUTTON1;
+			if(btn1 && !btn3)
+				cm.clickIzquierdo(f,c);
+			else if(btn1 && btn3)
+				System.out.println("buton13");
+				cm.clickIzquierdoDerecho(f, c);
+			btn1=btn3=false;
 			repaint();
-		}
-		else if(m.getButton()==m.BUTTON3)
-			try {
-				cm.clickDerecho(m.getX()/dimCelda,m.getY()/dimCelda);
-				repaint();
-			} catch (CasillaAbiertaException e) {}
-		else if(m.getButton()==m.BUTTON1){
-				/*try {*/
-					cm.clickIzquierdo(m.getX()/dimCelda, m.getY()/dimCelda);
-					repaint();
-				/*} catch (CasillaAbiertaException e) {}*/
-		}
+		
 		
 	}
+	
 
 }
