@@ -84,10 +84,12 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 			btn3=true;
 			if(!btn1)
 				try {
-					cm.clickDerecho(fp,cp);
+					cm.senalizar(fp,cp);
 				} catch (CasillaAbiertaException e) {
-
-				}
+			
+			}else if(m.getButton()==MouseEvent.BUTTON1)
+				btn1=true;
+			if(btn3 ||(btn1 && btn3))
 		 repaint();
 		}
 	}
@@ -96,12 +98,12 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 	public void mouseReleased(MouseEvent m) {
 		int f=m.getX()/dimCelda;
 		int c=m.getY()/dimCelda;
-		btn1=m.getButton()==MouseEvent.BUTTON1;
+		//btn1=m.getButton()==MouseEvent.BUTTON1;
 			if(btn1 && !btn3)
-				cm.clickIzquierdo(f,c);
+				cm.descubrir(f,c);
 			else if(btn1 && btn3)
 				System.out.println("buton13");
-				cm.clickIzquierdoDerecho(f, c);
+				//cm.descubrirMultiple(f, c);
 			btn1=btn3=false;
 			repaint();
 		

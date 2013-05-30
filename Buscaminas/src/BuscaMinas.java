@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 	
 
 public class BuscaMinas extends JFrame implements ActionListener{
@@ -66,8 +67,7 @@ public class BuscaMinas extends JFrame implements ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==itemNuevo){
-			
+		if(e.getSource()==itemNuevo){	
 		}
 	}
 
