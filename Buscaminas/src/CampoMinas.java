@@ -8,16 +8,16 @@ public class CampoMinas {
 	private int numMinas;
 	private int filas;
 	private int columnas;
-	
+	private int nm;
+	private float tiempoInicio;
 	public static int JUGANDO =0;
 	public static int VICTORIA=1;
 	public static int DERROTA=2;
 	
 	public CampoMinas(int filas,int columnas,int numMinas){
 		campoMinas=new Casilla[this.filas=filas][this.columnas=columnas];
-		estadoPartida=JUGANDO;
 		this.numMinas=numMinas;
-		casillasParaLaVictoria=filas*columnas-numMinas;		
+		this.tiempoInicio=System.currentTimeMillis();
 		reset();
 		
 		
@@ -25,22 +25,26 @@ public class CampoMinas {
 	}
 	public void reset(){
 		//relleno de casillas vacias
+		
+		casillasParaLaVictoria=filas*columnas-numMinas;	
 		for(int i=0;i<filas;i++)
 			for(int j=0;j<columnas;j++)
 				campoMinas[i][j]=new Casilla(Casilla.CERO);
 		rellenoaleatorio();
+		estadoPartida=JUGANDO;
 	}
 	private void rellenoaleatorio(){
 		//relleno aleatorio de minas
 		Random r = new Random();
 		int fila;
 		int columna;
-			while(numMinas>0){
+		int nm = numMinas;
+			while(nm>0){
 				fila= r.nextInt(filas);
 				columna=r.nextInt(columnas);
 				if(campoMinas[fila][columna].getContenido()==Casilla.CERO){
 					campoMinas[fila][columna]=new Casilla(Casilla.MINA);
-					numMinas--;
+					nm--;
 				}
 			}
 			//relleno de cuantas minas hay adiacente
@@ -95,14 +99,14 @@ public class CampoMinas {
 		}*/
 	
 	public void senalizar(int fila,int columna) throws CasillaAbiertaException{
-		
+			int nm=numMinas;
 			if(campoMinas[fila][columna].getEstado()==Casilla.CUBIERTA){
 				campoMinas[fila][columna].setEstado(Casilla.MARCADA);
-				numMinas--;
+				nm--;
 			}
 			else if(campoMinas[fila][columna].getEstado()==Casilla.MARCADA){
 				campoMinas[fila][columna].setEstado(Casilla.INTERROGACION);
-				numMinas++;
+				nm++;
 			}
 			else if(campoMinas[fila][columna].getEstado()==Casilla.INTERROGACION)
 					campoMinas[fila][columna].setEstado(Casilla.CUBIERTA);
@@ -144,7 +148,14 @@ public class CampoMinas {
 	public int getCasillasParaLaVictoria() {
 		return casillasParaLaVictoria;
 	}
+	public int minasFaltantes(){
+		return nm;
+	}
 	
-	
+	public int tiempoJuego(){
+		if(estadoPartida==JUGANDO)
+		return (int)((int)System.currentTimeMillis()-tiempoInicio);
+		return 0;
+	}
 
 }

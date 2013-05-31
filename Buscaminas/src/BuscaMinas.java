@@ -11,7 +11,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 	
 
-public class BuscaMinas extends JFrame implements ActionListener{
+public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	PanelCampoMinas PCM;
 	JLabel lblMinas;
 	JLabel lblTiempo;
@@ -22,6 +22,8 @@ public class BuscaMinas extends JFrame implements ActionListener{
 	JMenuItem itemOpciones;
 	JMenuItem itemAparencia;
 	JMenuItem itemSalir;
+	Thread t;
+	boolean iniciado=true; 
 	
 	public BuscaMinas() {
 		super("Buscaminas");
@@ -56,7 +58,6 @@ public class BuscaMinas extends JFrame implements ActionListener{
 		lblTiempo.setForeground(Color.WHITE);
 		add(lblTiempo,BorderLayout.WEST);
 		getContentPane().setBackground(Color.BLACK);
-		
 		pack();
 		
 	}
@@ -67,8 +68,27 @@ public class BuscaMinas extends JFrame implements ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==itemNuevo){	
+		if(e.getSource()==itemNuevo){
+			PCM.reset();
 		}
 	}
+	@Override
+	public void run() {
+		while(iniciado){
+			lblTiempo.setText(Integer.toString(PCM.tiempoRestante()));
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				
+			}
+		}
+	}
+	public void iniciar(){
+		t=new Thread(this);
+		iniciado=true;
+		t.start();
+	}
+	
+	
 
 }
