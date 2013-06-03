@@ -28,6 +28,7 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	private Thread t;
 	private boolean iniciado=true; 
 	private long tiempoInicio=System.currentTimeMillis();
+	private String tiempoJuego="0";
 	//private BufferedImage img= null;
 	
 	public BuscaMinas() {
@@ -59,7 +60,7 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		lblMinas=new JLabel(Integer.toString(PCM.getMinasFaltantes()));
 		lblMinas.setForeground(Color.WHITE);
 		add(lblMinas,BorderLayout.EAST);
-		lblTiempo=new JLabel("0");
+		lblTiempo=new JLabel(tiempoJuego);
 		lblTiempo.setForeground(Color.WHITE);
 		add(lblTiempo,BorderLayout.WEST);
 		getContentPane().setBackground(Color.BLACK);
@@ -83,8 +84,11 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	@Override
 	public void run() {
 		while(iniciado){
-		lblTiempo.setText(Long.toString((System.currentTimeMillis()-tiempoInicio)/1000));
-		lblMinas.setText(Integer.toString(PCM.getMinasFaltantes()));
+			
+			if(PCM.juegoIniciado())
+				tiempoJuego=Long.toString((System.currentTimeMillis()-tiempoInicio)/1000);
+			lblTiempo.setText(tiempoJuego);
+			lblMinas.setText(Integer.toString(PCM.getMinasFaltantes()));
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
