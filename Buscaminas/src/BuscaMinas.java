@@ -2,7 +2,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -12,18 +15,20 @@ import javax.swing.JPanel;
 	
 
 public class BuscaMinas extends JFrame implements ActionListener,Runnable{
-	PanelCampoMinas PCM;
-	JLabel lblMinas;
-	JLabel lblTiempo;
-	JMenuBar menuBar;
-	JMenu menuJuego;
-	JMenuItem itemNuevo;
-	JMenuItem itemEstadisticas;
-	JMenuItem itemOpciones;
-	JMenuItem itemAparencia;
-	JMenuItem itemSalir;
-	Thread t;
-	boolean iniciado=true; 
+	private PanelCampoMinas PCM;
+	private JLabel lblMinas;
+	private JLabel lblTiempo;
+	private JMenuBar menuBar;
+	private JMenu menuJuego;
+	private JMenuItem itemNuevo;
+	private JMenuItem itemEstadisticas;
+	private JMenuItem itemOpciones;
+	private JMenuItem itemAparencia;
+	private JMenuItem itemSalir;
+	private Thread t;
+	private boolean iniciado=true; 
+	private long tiempoInicio=System.currentTimeMillis();
+	//private BufferedImage img= null;
 	
 	public BuscaMinas() {
 		super("Buscaminas");
@@ -51,13 +56,14 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		setJMenuBar(menuBar);
 		PCM = new PanelCampoMinas(30,16,10);
 		add(PCM,BorderLayout.NORTH);
-		lblMinas=new JLabel("0");
+		lblMinas=new JLabel(Integer.toString(PCM.getMinasFaltantes()));
 		lblMinas.setForeground(Color.WHITE);
 		add(lblMinas,BorderLayout.EAST);
 		lblTiempo=new JLabel("0");
 		lblTiempo.setForeground(Color.WHITE);
 		add(lblTiempo,BorderLayout.WEST);
 		getContentPane().setBackground(Color.BLACK);
+		iniciar();
 		pack();
 		
 	}
@@ -69,15 +75,18 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==itemNuevo){
+			lblTiempo.setText("0");
+			tiempoInicio=System.currentTimeMillis();
 			PCM.reset();
 		}
 	}
 	@Override
 	public void run() {
 		while(iniciado){
-			lblTiempo.setText(Integer.toString(PCM.tiempoRestante()));
+		lblTiempo.setText(Long.toString((System.currentTimeMillis()-tiempoInicio)/1000));
+		lblMinas.setText(Integer.toString(PCM.getMinasFaltantes()));
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				
 			}
@@ -89,6 +98,10 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		t.start();
 	}
 	
-	
+	/*private void setImgMina(){
+		try {
+			   img = ImageIO.read( getClass().getResource("/img/mina.png"));
+			} catch (IOException e) {}
+	}*/
 
 }

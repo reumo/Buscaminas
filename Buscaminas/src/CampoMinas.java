@@ -9,7 +9,6 @@ public class CampoMinas {
 	private int filas;
 	private int columnas;
 	private int nm;
-	private float tiempoInicio;
 	public static int JUGANDO =0;
 	public static int VICTORIA=1;
 	public static int DERROTA=2;
@@ -17,7 +16,6 @@ public class CampoMinas {
 	public CampoMinas(int filas,int columnas,int numMinas){
 		campoMinas=new Casilla[this.filas=filas][this.columnas=columnas];
 		this.numMinas=numMinas;
-		this.tiempoInicio=System.currentTimeMillis();
 		reset();
 		
 		
@@ -77,7 +75,7 @@ public class CampoMinas {
 		campoMinas[fila][columna].setEstado(Casilla.DESCUBIERTA);
 	}*/
 	public void descubrir(int fila,int columna)/* throws CasillaAbiertaException*/{
-		if(campoMinas[fila][columna].getEstado()!=Casilla.DESCUBIERTA){
+		if(campoMinas[fila][columna].getEstado()==Casilla.CUBIERTA || campoMinas[fila][columna].getEstado()==Casilla.INTERROGACION){
 			campoMinas[fila][columna].setEstado(Casilla.DESCUBIERTA);
 			if(campoMinas[fila][columna].getContenido()==Casilla.MINA)
 				derrota();
@@ -102,19 +100,36 @@ public class CampoMinas {
 			int nm=numMinas;
 			if(campoMinas[fila][columna].getEstado()==Casilla.CUBIERTA){
 				campoMinas[fila][columna].setEstado(Casilla.MARCADA);
-				nm--;
+				numMinas--;
 			}
 			else if(campoMinas[fila][columna].getEstado()==Casilla.MARCADA){
 				campoMinas[fila][columna].setEstado(Casilla.INTERROGACION);
-				nm++;
+				numMinas++;
 			}
 			else if(campoMinas[fila][columna].getEstado()==Casilla.INTERROGACION)
 					campoMinas[fila][columna].setEstado(Casilla.CUBIERTA);
 		
 			else throw new CasillaAbiertaException();
 	}
+	private int banderasVecinas(int fila,int columna){
+		int cont=0;
+		for(int fi=fila-1;fi<=fila+1;fi++){
+			for(int co=columna-1;co<=columna+1;co++)
+				try{
+					if((co!=columna || fi!=fila) && campoMinas[fi][co].getEstado()==Casilla.MARCADA)
+						/*try {*/
+							cont++;
+						/*} catch (CasillaAbiertaException e) {
+							
+						}*/
+	
+				}
+					catch(IndexOutOfBoundsException e){}
+		}
+		return cont;
+	}
 	public void descubrirMultiple(int fila,int columna){
-		//if(campoMinas[fila][columna].getEstado()==Casilla.DESCUBIERTA && campoMinas[fila][columna].getContenido()!=Casilla.CERO)
+		if(campoMinas[fila][columna].getContenido()==banderasVecinas(fila, columna))
 			for(int fi=fila-1;fi<=fila+1;fi++)
 				for(int co=columna-1;co<=columna+1;co++)
 					try{
@@ -134,28 +149,25 @@ public class CampoMinas {
 		return estadoPartida;
 	}
 	
-	public int getNumMinas(){
-		return numMinas;
-	}
+	
 	private void victoria() {
-		estadoPartida=CampoMinas.VICTORIA;
+		
+		estadoPartida=VICTORIA;
 		
 	}
 	private void derrota() {
-		estadoPartida=CampoMinas.DERROTA;
+		estadoPartida=DERROTA;
 		
 	}
 	public int getCasillasParaLaVictoria() {
 		return casillasParaLaVictoria;
 	}
-	public int minasFaltantes(){
-		return nm;
+	public int getMinasFaltantes(){
+		if(estadoPartida==VICTORIA)
+			return 0;
+		return numMinas;
 	}
 	
-	public int tiempoJuego(){
-		if(estadoPartida==JUGANDO)
-		return (int)((int)System.currentTimeMillis()-tiempoInicio);
-		return 0;
-	}
+	
 
 }

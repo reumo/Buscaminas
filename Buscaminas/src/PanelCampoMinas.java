@@ -2,7 +2,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 
@@ -15,7 +19,8 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 	private int cp;
 	private boolean btn1=false;
 	private boolean btn3=false;
-	
+	private BufferedImage img= null;
+	//private BufferedImage bandera=null;
 	
 	public PanelCampoMinas(int filas,int columnas,int numMinas) {
 		this.filas=filas;
@@ -27,12 +32,16 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 		
 	}
 	public void paintComponent(Graphics g){
+		
 		if(cm.getEstadoPartida()==CampoMinas.DERROTA){
+			
 			for(int i=0;i<filas;i++)
 				for(int j=0;j< columnas;j++)
 					if(cm.getContenidoCelda(i, j)==Casilla.MINA){
 					g.setColor(Color.RED);
 					g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
+					setImgMina();
+					g.drawImage(img, i*dimCelda+4, j*dimCelda+1, this);
 				}
 		}
 		else if (cm.getEstadoPartida()==CampoMinas.VICTORIA){
@@ -42,11 +51,14 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 					if(cm.getContenidoCelda(i, j)==Casilla.MINA){
 						g.setColor(Color.GREEN);
 						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
+						setImgMina();
+						g.drawImage(img, i*dimCelda+4, j*dimCelda+1, this);
 					}
+					
 					else {
-						g.setColor(Color.DARK_GRAY);
-						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
 						g.setColor(Color.WHITE);
+						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
+						g.setColor(Color.BLACK);
 						if(cm.getContenidoCelda(i, j)!=Casilla.CERO)
 						g.drawString(Integer.toString(cm.getContenidoCelda(i, j)), i*dimCelda+7, j*dimCelda+15);
 					}
@@ -57,16 +69,7 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 				for(int j=0;j<columnas;j++){
 					g.setColor(Color.BLACK);
 					g.fillRect(i*dimCelda, j*dimCelda, dimCelda, dimCelda);
-					if(cm.getEstadoCelda(i, j)>=Casilla.CUBIERTA){
-						if(cm.getEstadoCelda(i, j)==Casilla.CUBIERTA)
-							g.setColor(Color.GRAY);
-						else if(cm.getEstadoCelda(i, j)==Casilla.MARCADA)
-							g.setColor(Color.BLUE);
-						else if(cm.getEstadoCelda(i, j)==Casilla.INTERROGACION)
-							g.setColor(Color.MAGENTA);
-						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
-					}
-					else {
+					if(cm.getEstadoCelda(i, j)==Casilla.DESCUBIERTA){
 						g.setColor(Color.BLACK);
 						g.fillRect(i*dimCelda, j*dimCelda, dimCelda, dimCelda);
 						g.setColor(Color.WHITE);
@@ -75,7 +78,30 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 						if(cm.getContenidoCelda(i, j)!=Casilla.CERO)
 							g.drawString(Integer.toString(cm.getContenidoCelda(i, j)), i*dimCelda+7, j*dimCelda+15);
 					}
+					else {
+						g.setColor(Color.GRAY);
+						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);							
+						if(cm.getEstadoCelda(i, j)==Casilla.MARCADA){
+							setImgBandera();
+							g.drawImage(img, i*dimCelda+1, j*dimCelda+1, this);
+						}
+						if(cm.getEstadoCelda(i, j)==Casilla.INTERROGACION){
+							g.setColor(Color.WHITE);
+							g.drawString("?", i*dimCelda+7, j*dimCelda+15);
+						}
+						
+					}
 				}
+	}
+	private void setImgMina(){
+		try {
+			   img = ImageIO.read( getClass().getResource("/img/mina.png"));
+			} catch (IOException e) {}
+	}
+	private void setImgBandera(){
+		try {
+			img= ImageIO.read( getClass().getResource("/img/bandera.png"));
+		} catch (IOException e) {}
 	}
 
 	@Override
@@ -144,11 +170,8 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 		repaint();
 	}
 	
-	public int minasFaltantes(){
-		return cm.minasFaltantes();
-	}
-	public int tiempoRestante(){
-			return (int) cm.tiempoJuego();
+	public int getMinasFaltantes(){
+		return cm.getMinasFaltantes();
 	}
 	
 
