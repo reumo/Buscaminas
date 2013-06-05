@@ -31,12 +31,18 @@ public class CampoMinas {
 		rellenoaleatorio();
 		estadoPartida=JUGANDO;
 	}
+	public void configuracion(int filas,int columnas,int numMinas){
+		this.filas=filas;
+		this.columnas=columnas;
+		this.numMinas=numMinas;
+		
+	}
 	private void rellenoaleatorio(){
 		//relleno aleatorio de minas
 		Random r = new Random();
 		int fila;
 		int columna;
-		int nm = numMinas;
+		nm = numMinas;
 			while(nm>0){
 				fila= r.nextInt(filas);
 				columna=r.nextInt(columnas);
@@ -45,6 +51,7 @@ public class CampoMinas {
 					nm--;
 				}
 			}
+		nm=numMinas;
 			//relleno de cuantas minas hay adiacente
 			for(int i=0;i<filas;i++)
 				for(int j=0;j<columnas;j++)
@@ -97,14 +104,14 @@ public class CampoMinas {
 		}*/
 	
 	public void senalizar(int fila,int columna) throws CasillaAbiertaException{
-			int nm=numMinas;
-			if(campoMinas[fila][columna].getEstado()==Casilla.CUBIERTA){
+			//nm=numMinas;
+			if(campoMinas[fila][columna].getEstado()==Casilla.CUBIERTA && nm>0){
 				campoMinas[fila][columna].setEstado(Casilla.MARCADA);
-				numMinas--;
+				nm--;
 			}
 			else if(campoMinas[fila][columna].getEstado()==Casilla.MARCADA){
 				campoMinas[fila][columna].setEstado(Casilla.INTERROGACION);
-				numMinas++;
+				nm++;
 			}
 			else if(campoMinas[fila][columna].getEstado()==Casilla.INTERROGACION)
 					campoMinas[fila][columna].setEstado(Casilla.CUBIERTA);
@@ -165,7 +172,7 @@ public class CampoMinas {
 	public int getMinasFaltantes(){
 		if(estadoPartida==VICTORIA)
 			return 0;
-		return numMinas;
+		return nm;
 	}
 	
 	

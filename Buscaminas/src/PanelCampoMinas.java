@@ -165,6 +165,9 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 		}
 		
 	}
+	public void configuracion(int filas,int columnas,int numMinas){
+		cm.configuracion(filas, columnas, numMinas);
+	}
 	public void reset(){
 		cm.reset();
 		repaint();
