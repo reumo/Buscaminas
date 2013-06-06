@@ -18,6 +18,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
+import javax.swing.border.Border;
 	
 
 public class BuscaMinas extends JFrame implements ActionListener,Runnable{
@@ -28,16 +29,16 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	private JMenu menuJuego;
 	private JMenuItem itemNuevo;
 	private JMenuItem itemEstadisticas;
-	private JMenuItem itemOpciones;
+	private JMenu menuOpciones;
 	private JMenuItem itemAparencia;
 	private JMenuItem itemSalir;
 	
-	//elementos pop up menu
-	private JRadioButton principiante;
-	private JRadioButton intermedio;
-	private JRadioButton experto;
-	private JMenuItem exitMenu;
-	private JMenuItem jugar;
+	//elementos  menu opciones
+	//private JPopupMenu menuOpciones;
+	private JMenuItem itemPrincipiante;
+	private JMenuItem itemIntermedio;
+	private JMenuItem itemExperto;
+
 	
 	
 	
@@ -45,7 +46,7 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	private boolean iniciado=true; 
 	private long tiempoInicio=System.currentTimeMillis();
 	private String tiempoJuego="0";
-	private JPopupMenu menuOpciones;
+	
 	private static int PRINCIPIANTE=0;
 	private static int INTERMEDIO=1;
 	private static int EXPERTO=2;
@@ -63,8 +64,8 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		itemNuevo.addActionListener(this);
 		itemEstadisticas=new JMenuItem("Estadisticas");
 		itemEstadisticas.addActionListener(this);
-		itemOpciones= new JMenuItem("Opciones");
-		itemOpciones.addActionListener(this);
+		menuOpciones= new JMenu("Opciones");
+		menuOpciones.addActionListener(this);
 		itemAparencia=new JMenuItem("Aparencia");
 		itemAparencia.addActionListener(this);
 		itemSalir=new JMenuItem("Salir");
@@ -72,13 +73,13 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		menuJuego.add(itemNuevo);
 		menuJuego.addSeparator();
 		menuJuego.add(itemEstadisticas);
-		menuJuego.add(itemOpciones);
+		menuJuego.add(menuOpciones);
 		menuJuego.add(itemAparencia);
 		menuJuego.addSeparator();
 		menuJuego.add(itemSalir);
 		menuBar.add(menuJuego);
 		setJMenuBar(menuBar);
-		PCM = new PanelCampoMinas(30,16,10);
+		PCM = new PanelCampoMinas(40,30,50);
 		add(PCM,BorderLayout.NORTH);
 		lblMinas=new JLabel(Integer.toString(PCM.getMinasFaltantes()));
 		lblMinas.setForeground(Color.WHITE);
@@ -93,42 +94,33 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		getContentPane().setBackground(Color.BLACK);
 		
 		
-		menuOpciones = new JPopupMenu("Opciones");
-		JLabel etiqueta = new JLabel("MENÚ DE OPCIONES");
+		//menuOpciones = new JPopupMenu("Opciones");
+		
 		ButtonGroup grupo=new ButtonGroup();
-		principiante=new JRadioButton("Principiante");
-		principiante.addActionListener(this);
-		intermedio=new JRadioButton("Intermedio");
-		intermedio.addActionListener(this);
-		experto=new JRadioButton("Experto");
-		experto.addActionListener(this);
-		jugar=new JMenuItem("Jugar");
-		jugar.addActionListener(this);
-		exitMenu=new JMenuItem("Salir");
-		exitMenu.addActionListener(this);
+		itemPrincipiante=new JMenuItem("Principiante");
+		itemPrincipiante.addActionListener(this);
+		itemIntermedio=new JMenuItem("Intermedio");
+		itemIntermedio.addActionListener(this);
+		itemExperto=new JMenuItem("-·- Experto -·-");
+		itemExperto.addActionListener(this);
+	
+
 		
 		
 		// menu opciones
-		grupo.add(principiante);
-		grupo.add(intermedio);
-		grupo.add(experto);
-		if(configuracion==EXPERTO) experto.setSelected(true);
-		else if (configuracion==INTERMEDIO) intermedio.setSelected(true);
-		else principiante.setSelected(true);
+		grupo.add(itemPrincipiante);
+		grupo.add(itemIntermedio);
+		grupo.add(itemExperto);
+		if(configuracion==EXPERTO) itemExperto.setSelected(true);
+		else if (configuracion==INTERMEDIO) itemIntermedio.setSelected(true);
+		else itemPrincipiante.setSelected(true);
 		
-		menuOpciones.add(etiqueta);
-		menuOpciones.addSeparator();
-		menuOpciones.add(principiante);
-		menuOpciones.add(intermedio);
-		menuOpciones.add(experto);
-		menuOpciones.addSeparator();
-		menuOpciones.add(jugar);
-		menuOpciones.addSeparator();
-		menuOpciones.add(exitMenu);
-	
-		//add(menuOpciones);
-		menuOpciones.setVisible(false);
 		
+		menuOpciones.add(itemPrincipiante);
+		menuOpciones.add(itemIntermedio);
+		menuOpciones.add(itemExperto);
+		
+
 		iniciar();
 		pack();
 		
@@ -150,35 +142,43 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 			
 			//System.out.println("estad");
 		}
-		else if(e.getSource()==itemOpciones){
-			add(menuOpciones);
-			menuOpciones.setVisible(true);
-		}
-		/*else if(e.getSource()==principiante){
-			configuracion=PRINCIPIANTE;
-		}*/
 		else if(e.getSource()==itemAparencia){
 	
-			//System.out.println("estad");
+			
 		}
 		else if(e.getSource()==itemSalir){
 			
 			System.exit(0);
 		}
-		else if(e.getSource()==principiante){
+		else if(e.getSource()==itemPrincipiante){
 			configuracion=PRINCIPIANTE;
-			//PCM.configuracion(10, 10, 10);
-			
-			
+			itemPrincipiante.setText("-·-Principiante-·-");
+			itemIntermedio.setText("Intermedio");
+			itemExperto.setText("Experto");
+			PCM.cambiarNivel(10, 10, 10);
+			lblTiempo.setText("0");
+			tiempoInicio=System.currentTimeMillis();
+			super.pack();
 		}
-		else if(e.getSource()==jugar){
-			//PCM.reset();
-			//PCM=new PanelCampoMinas(10, 10, 10);
-			
-			//menuOpciones.setVisible(false);
+		else if(e.getSource()==itemIntermedio){
+			configuracion=INTERMEDIO;
+			itemPrincipiante.setText("Principiante");
+			itemIntermedio.setText("-·-Intermedio-·-");
+			itemExperto.setText("Experto");
+			PCM.cambiarNivel(20, 20, 20);
+			lblTiempo.setText("0");
+			tiempoInicio=System.currentTimeMillis();
+			super.pack();
 		}
-		else if(e.getSource()==exitMenu){
-			menuOpciones.setVisible(false);
+		else if(e.getSource()==itemExperto){
+			configuracion=EXPERTO;
+			itemPrincipiante.setText("Principiante");
+			itemIntermedio.setText("Intermedio");
+			itemExperto.setText("-·-Experto-·-");
+			PCM.cambiarNivel(40, 30, 50);
+			lblTiempo.setText("0");
+			tiempoInicio=System.currentTimeMillis();
+			super.pack();
 		}
 	}
 	@Override

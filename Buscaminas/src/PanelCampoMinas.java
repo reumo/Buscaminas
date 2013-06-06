@@ -31,6 +31,15 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 		
 		
 	}
+	public void cambiarNivel(int filas,int columnas,int numMinas){
+		this.filas=filas;
+		this.columnas=columnas;
+		//addMouseListener.(this);
+		cm=new CampoMinas(filas,columnas,numMinas);
+		setPreferredSize(new java.awt.Dimension(filas*dimCelda, columnas*dimCelda));
+		repaint();
+		
+	}
 	public void paintComponent(Graphics g){
 		
 		if(cm.getEstadoPartida()==CampoMinas.DERROTA){
