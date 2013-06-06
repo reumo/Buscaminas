@@ -45,13 +45,18 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 		if(cm.getEstadoPartida()==CampoMinas.DERROTA){
 			
 			for(int i=0;i<filas;i++)
-				for(int j=0;j< columnas;j++)
+				for(int j=0;j< columnas;j++){
+					if(cm.getEstadoCelda(i, j)==Casilla.MARCADA){
+						setImgMinaError();
+						g.drawImage(img, i*dimCelda+4, j*dimCelda+1, this);
+					}
 					if(cm.getContenidoCelda(i, j)==Casilla.MINA){
-					g.setColor(Color.RED);
-					g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
-					setImgMina();
-					g.drawImage(img, i*dimCelda+4, j*dimCelda+1, this);
+						g.setColor(Color.RED);
+						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
+						setImgMina();
+						g.drawImage(img, i*dimCelda+4, j*dimCelda+1, this);
 				}
+			}
 		}
 		else if (cm.getEstadoPartida()==CampoMinas.VICTORIA){
 			
@@ -110,6 +115,11 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 	private void setImgBandera(){
 		try {
 			img= ImageIO.read( getClass().getResource("/img/bandera.png"));
+		} catch (IOException e) {}
+	}
+	private void setImgMinaError(){
+		try {
+			img= ImageIO.read( getClass().getResource("/img/minaError.png"));
 		} catch (IOException e) {}
 	}
 
