@@ -77,10 +77,7 @@ public class CampoMinas {
 	public int getEstadoCelda(int fila,int columna){
 		return campoMinas[fila][columna].getEstado();
 	}
-	/*// Metodo de pruebaaaaaaaaaaaaaaa
-	public void setEstadoCelda(int fila,int columna){
-		campoMinas[fila][columna].setEstado(Casilla.DESCUBIERTA);
-	}*/
+
 	public void descubrir(int fila,int columna)/* throws CasillaAbiertaException*/{
 		if(campoMinas[fila][columna].getEstado()==Casilla.CUBIERTA || campoMinas[fila][columna].getEstado()==Casilla.INTERROGACION){
 			campoMinas[fila][columna].setEstado(Casilla.DESCUBIERTA);

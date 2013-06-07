@@ -195,10 +195,9 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 	public int getMinasFaltantes(){
 		return cm.getMinasFaltantes();
 	}
-	public boolean juegoIniciado(){
-		if(cm.getEstadoPartida()==CampoMinas.JUGANDO)
-			return true;
-		else return false;
+	public int getEstadoPartida(){
+		return cm.getEstadoPartida();
+			
 	}
 
 }

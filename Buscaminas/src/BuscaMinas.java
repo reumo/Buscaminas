@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.DataOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -15,10 +17,12 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.border.Border;
+import javax.swing.plaf.OptionPaneUI;
 	
 
 public class BuscaMinas extends JFrame implements ActionListener,Runnable{
@@ -39,18 +43,21 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	private JMenuItem itemIntermedio;
 	private JMenuItem itemExperto;
 
-	
+
 	
 	
 	private Thread t;
 	private boolean iniciado=true; 
 	private long tiempoInicio=System.currentTimeMillis();
-	private String tiempoJuego="0";
+	private int tiempoJuego=0;
 	
 	private static int PRINCIPIANTE=0;
 	private static int INTERMEDIO=1;
 	private static int EXPERTO=2;
 	private int configuracion=EXPERTO;
+	
+	private int record[]={-1,-1,-1};
+	private String nombreRecord[]={"------","------","------"};
 	
 	
 	public BuscaMinas() {
@@ -87,7 +94,7 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		add(lblMinas,BorderLayout.EAST);
 	
 		
-		lblTiempo=new JLabel(tiempoJuego);
+		lblTiempo=new JLabel(Long.toString(tiempoJuego));
 		lblTiempo.setIcon(new ImageIcon(getClass().getResource("/img/reloj.png")));
 		lblTiempo.setForeground(Color.WHITE);
 		add(lblTiempo,BorderLayout.WEST);
@@ -140,7 +147,7 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		}
 		else if(e.getSource()==itemEstadisticas){
 			
-			//System.out.println("estad");
+			verRecords();
 		}
 		else if(e.getSource()==itemAparencia){
 	
@@ -185,16 +192,42 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	public void run() {
 		while(iniciado){
 			
-			if(PCM.juegoIniciado())
-				tiempoJuego=Long.toString((System.currentTimeMillis()-tiempoInicio)/1000);
-			lblTiempo.setText(tiempoJuego);
-			lblMinas.setText(Integer.toString(PCM.getMinasFaltantes()));
+			if(PCM.getEstadoPartida()==CampoMinas.JUGANDO){
+				tiempoJuego=(int) (System.currentTimeMillis()-tiempoInicio)/1000;
+				lblTiempo.setText(Integer.toString(tiempoJuego));
+				lblMinas.setText(Integer.toString(PCM.getMinasFaltantes()));
+			}
+			if(PCM.getEstadoPartida()==CampoMinas.VICTORIA)
+				insertarRecord();
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				
+			
 			}
 		}
+	}
+	private void insertarRecord(){
+		
+		if(record[configuracion]>tiempoJuego || record[configuracion]==-1){
+			record[configuracion]=tiempoJuego;
+			nombreRecord[configuracion]=JOptionPane.showInputDialog("nuevo record:");
+		}
+		
+		
+	}
+	private void verRecords(){
+		StringBuffer r=new StringBuffer();
+		if(record[0]==-1)
+			r.append("Principiante: "+"------------------\n");
+		else r.append("Principiante: "+nombreRecord[0]+" "+record[0]+"s\n");
+		if(record[1]==-1)
+			r.append("Intermedio:   "+"------------------\n");
+		else r.append("Intermedio:   "+nombreRecord[1]+" "+record[1]+"s\n");
+		if(record[2]==-1)
+			r.append("Experto:      "+"------------------\n");
+		else r.append("Experto:      "+nombreRecord[2]+" "+record[2]+"s");
+			JOptionPane.showMessageDialog(null, r);
+	
 	}
 	public void iniciar(){
 		t=new Thread(this);
