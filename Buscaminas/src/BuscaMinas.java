@@ -4,7 +4,9 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -216,17 +218,36 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		
 		
 	}
+	
 	private void verRecords(){
+		String rec=null;
+		try {
+			BufferedReader bf = new BufferedReader(new FileReader("bin/txt/record.txt"));
+			
+			int i=0;
+			while (i<configuracion) {
+				rec=bf.readLine();
+				  i++;
+				}
+			bf.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
 		StringBuffer r=new StringBuffer();
-		if(record[0]==-1)
+		if(Integer.parseInt(rec)==-1)
 			r.append("Principiante: "+"------------------\n");
-		else r.append("Principiante: "+nombreRecord[0]+" "+record[0]+"s\n");
-		if(record[1]==-1)
+		else r.append("Principiante: "+nombreRecord[0]+" "+rec+"s\n");
+		if(Integer.parseInt(rec)==-1)
 			r.append("Intermedio:   "+"------------------\n");
-		else r.append("Intermedio:   "+nombreRecord[1]+" "+record[1]+"s\n");
-		if(record[2]==-1)
+		else r.append("Intermedio:   "+nombreRecord[1]+" "+rec+"s\n");
+		if(Integer.parseInt(rec)==-1)
 			r.append("Experto:      "+"------------------\n");
-		else r.append("Experto:      "+nombreRecord[2]+" "+record[2]+"s");
+		else r.append("Experto:      "+nombreRecord[2]+" "+record+"s");
 			JOptionPane.showMessageDialog(null, r);
 	
 	}
