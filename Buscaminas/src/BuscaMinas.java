@@ -212,6 +212,7 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 			record[configuracion]=tiempoJuego;
 			nombreRecord[configuracion]=JOptionPane.showInputDialog("nuevo record:");
 		}
+		if(nombreRecord[configuracion]==null)nombreRecord[configuracion]="Anonimo";
 		
 		
 	}
