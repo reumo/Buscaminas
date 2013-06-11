@@ -5,10 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -57,6 +61,9 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	private static int INTERMEDIO=1;
 	private static int EXPERTO=2;
 	private int configuracion=EXPERTO;
+	
+	private static boolean NOMBRE=true;
+	private static boolean NUMERO=false;
 	
 	private int record[]={-1,-1,-1};
 	private String nombreRecord[]={"------","------","------"};
@@ -129,7 +136,11 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 		menuOpciones.add(itemIntermedio);
 		menuOpciones.add(itemExperto);
 		
-
+		for(int i=0;i<=EXPERTO;i++){
+			record[i]=leerNumeroRecord(i);
+			nombreRecord[i]=leerNombreRecord(i);
+			}
+		
 		iniciar();
 		pack();
 		
@@ -210,26 +221,80 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 	}
 	private void insertarRecord(){
 		
-		if(record[configuracion]>tiempoJuego || record[configuracion]==-1){
+		if(leerNumeroRecord(configuracion)>tiempoJuego || leerNumeroRecord(configuracion)==-1){
 			record[configuracion]=tiempoJuego;
-			nombreRecord[configuracion]=JOptionPane.showInputDialog("nuevo record:");
+			try{
+				nombreRecord[configuracion]=JOptionPane.showInputDialog("nuevo record:").replace("¨"," ");
+			}
+			catch (NullPointerException e){
+				nombreRecord[configuracion]="Anonimo";
+			}
+			try {
+				BufferedWriter escritor=new BufferedWriter(
+						new OutputStreamWriter(
+								new FileOutputStream("bin/txt/record.txt")));
+				for(int i=0;i<=EXPERTO;i++){
+					escritor.write(nombreRecord[i]+"¨"+record[i]);
+					escritor.newLine();
+				}
+				escritor.close();
+						
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+			
+			
+			
 		}
-		if(nombreRecord[configuracion]==null)nombreRecord[configuracion]="Anonimo";
+		
 		
 		
 	}
 	
 	private void verRecords(){
+		
+		
+		StringBuffer r=new StringBuffer();
+		if(leerNumeroRecord(PRINCIPIANTE)==-1)
+			r.append("Principiante: "+"------------------\n");
+		else r.append("Principiante: "+leerNombreRecord(PRINCIPIANTE)+" "+leerNumeroRecord(PRINCIPIANTE)+"s\n");
+		if(leerNumeroRecord(INTERMEDIO)==-1)
+			r.append("Intermedio:   "+"------------------\n");
+		else r.append("Intermedio:   "+leerNombreRecord(INTERMEDIO)+" "+leerNumeroRecord(INTERMEDIO)+"s\n");
+		if(leerNumeroRecord(EXPERTO)==-1)
+			r.append("Experto:         "+"------------------\n");
+		else r.append("Experto:         "+leerNombreRecord(EXPERTO)+" "+leerNumeroRecord(EXPERTO)+"s");
+			JOptionPane.showMessageDialog(null, r);
+	
+			
+	}
+	private int leerNumeroRecord(int nivel){
+		String rec=leerRecord(nivel);
+		return Integer.parseInt(rec.substring(rec.indexOf("¨")+1));
+	}
+	private String leerNombreRecord(int nivel){
+		String rec=leerRecord(nivel);
+		return rec.substring(0,rec.indexOf("¨"));
+	}
+	
+	private String leerRecord(int nivel){
 		String rec=null;
 		try {
-			BufferedReader bf = new BufferedReader(new FileReader("bin/txt/record.txt"));
+			BufferedReader lector = new BufferedReader(new FileReader("bin/txt/record.txt"));
 			
 			int i=0;
-			while (i<configuracion) {
-				rec=bf.readLine();
-				  i++;
+			while (i<=nivel) {
+				rec=lector.readLine();
+				i++;
 				}
-			bf.close();
+			lector.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -237,19 +302,7 @@ public class BuscaMinas extends JFrame implements ActionListener,Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		
-		StringBuffer r=new StringBuffer();
-		if(Integer.parseInt(rec)==-1)
-			r.append("Principiante: "+"------------------\n");
-		else r.append("Principiante: "+nombreRecord[0]+" "+rec+"s\n");
-		if(Integer.parseInt(rec)==-1)
-			r.append("Intermedio:   "+"------------------\n");
-		else r.append("Intermedio:   "+nombreRecord[1]+" "+rec+"s\n");
-		if(Integer.parseInt(rec)==-1)
-			r.append("Experto:      "+"------------------\n");
-		else r.append("Experto:      "+nombreRecord[2]+" "+record+"s");
-			JOptionPane.showMessageDialog(null, r);
-	
+		return rec;
 	}
 	public void iniciar(){
 		t=new Thread(this);
