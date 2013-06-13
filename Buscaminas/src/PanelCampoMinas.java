@@ -46,22 +46,52 @@ public class PanelCampoMinas extends JPanel implements MouseListener{
 			
 			for(int i=0;i<filas;i++)
 				for(int j=0;j< columnas;j++){
+					g.setColor(Color.BLACK);
+					g.fillRect(i*dimCelda, j*dimCelda, dimCelda, dimCelda);
+					g.setColor(Color.GRAY);
+					g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);	
+					if(cm.getEstadoCelda(i, j)==Casilla.DESCUBIERTA){
+						g.setColor(Color.BLACK);
+						g.fillRect(i*dimCelda, j*dimCelda, dimCelda, dimCelda);
+						g.setColor(Color.WHITE);
+						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
+						g.setColor(Color.BLACK);
+						if(cm.getContenidoCelda(i, j)!=Casilla.CERO)
+							g.drawString(Integer.toString(cm.getContenidoCelda(i, j)), i*dimCelda+7, j*dimCelda+15);
+					}
 					if(cm.getEstadoCelda(i, j)==Casilla.MARCADA){
 						setImgMinaError();
 						g.drawImage(img, i*dimCelda+4, j*dimCelda+1, this);
 					}
-					if(cm.getContenidoCelda(i, j)==Casilla.MINA){
+					else if(cm.getContenidoCelda(i, j)==Casilla.MINA){
 						g.setColor(Color.RED);
 						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
 						setImgMina();
 						g.drawImage(img, i*dimCelda+4, j*dimCelda+1, this);
-				}
+						
+					}
+					
+						
+					
 			}
 		}
 		else if (cm.getEstadoPartida()==CampoMinas.VICTORIA){
 			
 			for(int i=0;i<filas;i++)
 				for(int j=0;j<columnas;j++){
+					g.setColor(Color.BLACK);
+					g.fillRect(i*dimCelda, j*dimCelda, dimCelda, dimCelda);
+					g.setColor(Color.GRAY);
+					g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);	
+					if(cm.getEstadoCelda(i, j)==Casilla.DESCUBIERTA){
+						g.setColor(Color.BLACK);
+						g.fillRect(i*dimCelda, j*dimCelda, dimCelda, dimCelda);
+						g.setColor(Color.WHITE);
+						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
+						g.setColor(Color.BLACK);
+						if(cm.getContenidoCelda(i, j)!=Casilla.CERO)
+							g.drawString(Integer.toString(cm.getContenidoCelda(i, j)), i*dimCelda+7, j*dimCelda+15);
+					}
 					if(cm.getContenidoCelda(i, j)==Casilla.MINA){
 						g.setColor(Color.GREEN);
 						g.fillRect(i*dimCelda+1, j*dimCelda+1, dimCelda-1, dimCelda-1);
